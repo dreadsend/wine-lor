@@ -13,7 +13,7 @@
 
 pkgname=wine-lor
 pkgver=4.19
-pkgrel=1
+pkgrel=2
 
 _pkgbasever=${pkgver/rc/-rc}
 
@@ -158,32 +158,53 @@ build() {
   # https://bugs.winehq.org/show_bug.cgi?id=43530
   export CFLAGS="${CFLAGS/-fno-plt/}"
   export LDFLAGS="${LDFLAGS/,-z,now/}"
- 
-  # Make sure everything builds for 32bit
-  export CFLAGS="-m32 $CFLAGS"
 
-  msg2 "Building Wine-32..."
+  msg2 "Building Wine-64..."
 
-  export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
-  cd "$srcdir/$pkgname-32-build"
+  cd "$srcdir/$pkgname-64-build"
 
   ../$pkgname/configure \
     --prefix=/opt/wine-lor \
     --with-x \
     --with-gstreamer \
     --with-xattr \
-    --libdir=/usr/lib32
+    --libdir=/opt/wine-lor/lib \
+    --enable-win64
 
   make
+
+  msg2 "Building Wine-32..."
+
+  export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+  cd "$srcdir/$pkgname-32-build"
+  ../$pkgname/configure \
+    --prefix=/opt/wine-lor \
+    --with-x \
+    --with-gstreamer \
+    --with-xattr \
+    --libdir=/opt/wine-lor/lib32 \
+    --with-wine64="$srcdir/$pkgname-64-build"
+
+  make
+
 }
 
 package() {
+
   msg2 "Packaging Wine-32..."
   cd "$srcdir/$pkgname-32-build"
 
   make prefix="$pkgdir/opt/wine-lor" \
     libdir="$pkgdir/opt/wine-lor/lib32" \
     dlldir="$pkgdir/opt/wine-lor/lib32/wine" install
+
+
+  msg2 "Packaging Wine-64..."
+  cd "$srcdir/$pkgname-64-build"
+
+  make prefix="$pkgdir/opt/wine-lor" \
+    libdir="$pkgdir/opt/wine-lor/lib" \
+    dlldir="$pkgdir/opt/wine-lor/lib/wine" install
 
   # Font aliasing settings for Win32 applications
   install -d "$pkgdir"/etc/fonts/conf.{avail,d}
