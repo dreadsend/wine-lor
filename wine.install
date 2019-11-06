@@ -1,0 +1,13 @@
+post_install() {
+  echo
+  echo 'Please note:'
+  echo 'You have to call the Legends of Runeterra executable with the command'
+  echo '"/opt/wine-lor/bin/wine" instead of just "wine". Note, that that is an R'
+  echo 'This allows you to have an up-to-date wine-staging installed in'
+  echo 'parallel to this "special LoR wine build"'
+  echo
+}
+
+post_upgrade() {
+  post_install
+}
