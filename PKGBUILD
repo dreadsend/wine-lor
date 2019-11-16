@@ -12,20 +12,20 @@
 #See Bug Report: https://bugs.winehq.org/show_bug.cgi?id=47970 
 
 pkgname=wine-lor
-pkgver=4.19
-pkgrel=2
+pkgver=4.20
+pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 
 source=(https://dl.winehq.org/wine/source/4.x/wine-$_pkgbasever.tar.xz
         "wine-staging-v$_pkgbasever.tar.gz::https://github.com/wine-staging/wine-staging/archive/v$_pkgbasever.tar.gz"
         30-win32-aliases.conf
-        lor-patches::https://bugs.winehq.org/attachment.cgi?id=65592
+        lor-patch.diff::https://bugs.winehq.org/attachment.cgi?id=65624
         )
-sha512sums=('a86bd7ccfb1878445ea946e4ca72769c10b4d966bcc893536a8c3eaa29484ba687dc3a44755ec92a2ad6073e736985b814c0c682bf4f90b5ffe2bca0ebbf4b25'
-            'a47ae16dd39797b54011f942fe7e722897af7ddc0bed2bf2e39c46aecf60a02769f7287609c63b4c0c3f1c8e40172e0cdf3bdb53562a07d7a2b7ac53e570dbdc'
+sha512sums=('c01af88106b8a808fbceb6ace45882c300656a47913142ba7052283b358d6d5b4379895804e15a2ca1870a4e955ea3ca857ec042a8070ea4ffaefa0c7a84e701'
+            '2ce4f6fa83fc275c83bc7f7bbd4b1a4ca65f7e55e16af40958635b8b2efc2b174baa79ed576ed09c4c13b572756fb6262f19281e5b72797c7e0f1f6c4dd1a4ee'
             '6200d75042a5993294ee58583fa9d145e46a36bcc2a38ddae92482366aaf67423b160556f748cd85d3ee1c521c497488810bdc0b79e192742f83ae49e7f55938'
-            '37294cb699af058c24a2ea422360b0325e36119130481170328796bdcbe7c0d0512441650fe8b1924fa149c9b7d0e68a4cc43a675082e3e280d5beb4bdb0e8d3'
+            '02a3f134b8da2c5d1289c43ae732f31eb8a93fae0aa8b61b8087e9f386cec0adb86fe5b836a5a214b97510ce281165e5fd496be9d431e7889b20abe9c07eea4f'
             )
 
 
@@ -139,9 +139,7 @@ prepare() {
 
   #Apply Legends of Runeterra Fixes
   pushd "$srcdir/$pkgname"
-  patch -p1 -i "$srcdir/0001-NtContinue-accept-both-i386-and-AMD64-full-contexts.patch"
-  patch -p1 -i "$srcdir/0002-Winebuild-rewrote-syscall-dispatcher-now-it-returns-.patch"
-  patch -p1 -i "$srcdir/0003-Signal-x86_64-Use-NtContinue-to-restore-context.patch"
+  patch -p1 -i "$srcdir/lor-patch.diff"
   popd
 
   # Fix opencl header path
