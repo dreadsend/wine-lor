@@ -1,4 +1,4 @@
-#WARNING! This patch is not necessary, all changes are staged! 
+# WARNING! This patch is not necessary, all changes are staged! 
 
 There are also Network connectivity issues in Legends of Runeterra making it pretty unplayable. 
 I will keep this repo around only in case it may be needed in future
